@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 50 Grocery Deals - 11435</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --secondary: #fbc02d;
+            --bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .filter-section {
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .filter-group {
+            margin-bottom: 15px;
+        }
+        .filter-group:last-child {
+            margin-bottom: 0;
+        }
+        .filter-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+        .filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9em;
+        }
+        .filter-btn:hover {
+            background: #f0f0f0;
+        }
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .deals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .deal-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            border-top: 5px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+        }
+        .deal-card:hover {
+            transform: translateY(-5px);
+        }
+        .category-tag {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #777;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .item-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            flex-grow: 1;
+        }
+        .deal-price {
+            font-size: 1.4em;
+            color: #d32f2f;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .store-name {
+            font-size: 0.9em;
+            color: #555;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #777;
+            font-size: 0.9em;
+        }
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Top 50 Grocery Deals near 11435</h1>
+            <p>Best deals within 2 miles of Jamaica, NY - Week of April 22, 2026</p>
+        </header>
+
+        <div class="filter-section">
+            <div class="filter-group">
+                <span class="filter-label">Categories</span>
+                <div class="filters" id="categoryFilters">
+                    <button class="filter-btn active" onclick="setCategory('all')">All Categories</button>
+                    <button class="filter-btn" onclick="setCategory('Bakery')">Bakery</button>
+                    <button class="filter-btn" onclick="setCategory('Snacks')">Snacks</button>
+                    <button class="filter-btn" onclick="setCategory('Ice Cream')">Ice Cream</button>
+                    <button class="filter-btn" onclick="setCategory('Meat')">Meat/Seafood</button>
+                    <button class="filter-btn" onclick="setCategory('Dairy')">Dairy/Deli</button>
+                    <button class="filter-btn" onclick="setCategory('Produce')">Produce</button>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <span class="filter-label">Supermarkets</span>
+                <div class="filters" id="storeFilters">
+                    <button class="filter-btn active" onclick="setStore('all')">All Stores</button>
+                    <button class="filter-btn" onclick="setStore('Foodtown')">Foodtown</button>
+                    <button class="filter-btn" onclick="setStore('Ideal Food Basket')">Ideal Basket</button>
+                    <button class="filter-btn" onclick="setStore('Key Food')">Key Food</button>
+                    <button class="filter-btn" onclick="setStore('C-Town')">C-Town</button>
+                    <button class="filter-btn" onclick="setStore('Food Bazaar')">Food Bazaar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dealsGrid" class="deals-grid">
+            <!-- Deals will be populated by JS -->
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Grocery Deal Finder Local Dashboard</p>
+        </footer>
+    </div>
+
+    <script>
+        const deals = [
+            { cat: 'Bakery', name: 'Fresh International Baguettes', price: '2 for $3.00', store: 'Food Bazaar' },
+            { cat: 'Bakery', name: "Entenmann's Little Bites", price: '$2.99', store: 'Key Food' },
+            { cat: 'Bakery', name: 'Lofthouse Cookies', price: '$3.49', store: 'Ideal Food Basket' },
+            { cat: 'Bakery', name: 'Krasdale Sliced Bread', price: '$1.99', store: 'C-Town' },
+            { cat: 'Bakery', name: 'Store Baked Apple Pie', price: '$4.99', store: 'Foodtown' },
+            { cat: 'Bakery', name: 'Pan Sobao (Fresh)', price: '$2.49', store: 'Food Bazaar' },
+            { cat: 'Bakery', name: "Thomas' English Muffins", price: 'BOGO FREE', store: 'Key Food' },
+            { cat: 'Bakery', name: 'Fresh Glazed Donuts (6pk)', price: '$3.99', store: 'Ideal Food Basket' },
+            { cat: 'Bakery', name: 'Kaiser Rolls (6pk)', price: '$2.49', store: 'C-Town' },
+            { cat: 'Bakery', name: 'Italian Bread Loaf', price: '$1.99', store: 'Foodtown' },
+            
+            { cat: 'Snacks', name: "Lay's Potato Chips (Family Size)", price: '2 for $6.00', store: 'Food Bazaar' },
+            { cat: 'Snacks', name: 'Nabisco Oreo Cookies', price: '$3.49', store: 'Key Food' },
+            { cat: 'Snacks', name: 'Sunkist Soda (2L)', price: '4 for $5.00', store: 'Ideal Food Basket' },
+            { cat: 'Snacks', name: 'Pringles', price: '3 for $5.00', store: 'C-Town' },
+            { cat: 'Snacks', name: 'Tostitos Tortilla Chips', price: '$3.99', store: 'Foodtown' },
+            { cat: 'Snacks', name: 'Tropical Mango Juice (1L)', price: '$1.49', store: 'Food Bazaar' },
+            { cat: 'Snacks', name: 'Cadbury Chocolate Bars', price: '2 for $3.00', store: 'Key Food' },
+            { cat: 'Snacks', name: 'Wise Potato Chips', price: '2 for $5.00', store: 'Ideal Food Basket' },
+            { cat: 'Snacks', name: 'Krasdale Popcorn (3pk)', price: '$1.99', store: 'C-Town' },
+            { cat: 'Snacks', name: 'Planters Peanuts', price: '$2.99', store: 'Foodtown' },
+            
+            { cat: 'Ice Cream', name: 'Haagen-Dazs (14oz)', price: '$3.99', store: 'Food Bazaar' },
+            { cat: 'Ice Cream', name: "Ben & Jerry's", price: '$4.49', store: 'Key Food' },
+            { cat: 'Ice Cream', name: 'Breyers Ice Cream (1.5qt)', price: '$3.99', store: 'Ideal Food Basket' },
+            { cat: 'Ice Cream', name: 'Krasdale Ice Cream Sandwiches', price: '$2.99', store: 'C-Town' },
+            { cat: 'Ice Cream', name: "Friendly's Ice Cream", price: '$3.49', store: 'Foodtown' },
+            
+            { cat: 'Meat', name: 'Beef NY Strip Steak', price: '$7.99/lb', store: 'Food Bazaar' },
+            { cat: 'Meat', name: 'Jones Liverwurst', price: '$3.99', store: 'Key Food' },
+            { cat: 'Meat', name: 'Fresh Beef Sirloin Cubes', price: '$5.99/lb', store: 'Ideal Food Basket' },
+            { cat: 'Meat', name: 'Whole Young Chicken', price: '$1.29/lb', store: 'C-Town' },
+            { cat: 'Meat', name: 'Fresh Atlantic Salmon Fillet', price: '$9.99/lb', store: 'Foodtown' },
+            { cat: 'Meat', name: 'Pork Shoulder Butt', price: '$1.49/lb', store: 'Food Bazaar' },
+            { cat: 'Meat', name: 'Wholey Clam Meat', price: '$4.99', store: 'Key Food' },
+            { cat: 'Meat', name: 'Great American White Shrimp', price: '$5.99', store: 'Ideal Food Basket' },
+            { cat: 'Meat', name: 'Ground Beef (80% Lean)', price: '$3.99/lb', store: 'C-Town' },
+            { cat: 'Meat', name: 'Boneless Chicken Breasts', price: '$2.99/lb', store: 'Foodtown' },
+            
+            { cat: 'Dairy', name: 'Galbani Mozzarella (16oz)', price: '$3.99', store: 'Food Bazaar' },
+            { cat: 'Dairy', name: 'Prima Donna Gouda', price: '$6.99/lb', store: 'Key Food' },
+            { cat: 'Dairy', name: 'Lacey Swiss Cheese', price: '$5.99/lb', store: 'Ideal Food Basket' },
+            { cat: 'Dairy', name: 'Krasdale Milk (Gallon)', price: '$3.49', store: 'C-Town' },
+            { cat: 'Dairy', name: 'Large Eggs (Dozen)', price: '$2.49', store: 'Foodtown' },
+            { cat: 'Dairy', name: 'Chobani Greek Yogurt', price: '10 for $10.00', store: 'Food Bazaar' },
+            { cat: 'Dairy', name: 'Philadelphia Cream Cheese', price: '$3.49', store: 'Key Food' },
+            { cat: 'Dairy', name: 'Tropicana Orange Juice (52oz)', price: '$3.99', store: 'Ideal Food Basket' },
+            { cat: 'Dairy', name: 'Krasdale Butter (1lb)', price: '$3.99', store: 'C-Town' },
+            { cat: 'Dairy', name: 'Sargento Shredded Cheese', price: '$2.99', store: 'Foodtown' },
+            
+            { cat: 'Produce', name: 'Tropical Mangoes', price: '5 for $5.00', store: 'Food Bazaar' },
+            { cat: 'Produce', name: 'Green Plantains', price: '10 for $3.00', store: 'Key Food' },
+            { cat: 'Produce', name: 'Fresh Green Bananas', price: '$0.49/lb', store: 'Ideal Food Basket' },
+            { cat: 'Produce', name: 'Red Seedless Grapes', price: '$1.99/lb', store: 'C-Town' },
+            { cat: 'Produce', name: 'Strawberries (1lb)', price: '$2.99', store: 'Foodtown' }
+        ];
+
+        let currentCategory = 'all';
+        let currentStore = 'all';
+
+        function renderDeals() {
+            const grid = document.getElementById('dealsGrid');
+            grid.innerHTML = '';
+            
+            const filtered = deals.filter(d => {
+                const catMatch = currentCategory === 'all' || d.cat === currentCategory;
+                const storeMatch = currentStore === 'all' || d.store === currentStore;
+                return catMatch && storeMatch;
+            });
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="no-results">No deals found for this combination. Try another filter!</div>';
+                return;
+            }
+
+            filtered.forEach(deal => {
+                const card = document.createElement('div');
+                card.className = 'deal-card';
+                card.innerHTML = `
+                    <span class="category-tag">${deal.cat}</span>
+                    <div class="item-name">${deal.name}</div>
+                    <div class="deal-price">${deal.price}</div>
+                    <div class="store-name">📍 ${deal.store}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            updateButtonState('categoryFilters', cat);
+            renderDeals();
+        }
+
+        function setStore(store) {
+            currentStore = store;
+            updateButtonState('storeFilters', store);
+            renderDeals();
+        }
+
+        function updateButtonState(containerId, value) {
+            const container = document.getElementById(containerId);
+            const buttons = container.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                // Check if button text matches or value is 'all'
+                if (btn.getAttribute('onclick').includes(`'${value}'`)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Initial render
+        renderDeals();
+    </script>
+</body>
+</html>
