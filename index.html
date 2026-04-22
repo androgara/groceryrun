@@ -3,182 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreshDeals 11435 - Grocery Savings</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>GroceryRun 11435</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            --bg: #ffffff;
+            --item-bg: #f9fafb;
+            --text: #111827;
+            --muted: #6b7280;
+            --accent: #ef4444;
             --primary: #10b981;
-            --primary-dark: #059669;
-            --accent: #f43f5e;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
+        
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg);
-            color: var(--text-main);
-            padding-bottom: 50px;
+            color: var(--text);
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         header {
-            background: linear-gradient(135deg, #10b981, #3b82f6);
-            color: white;
-            padding: 40px 20px;
+            margin-bottom: 24px;
             text-align: center;
-            margin-bottom: 30px;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+        header p { color: var(--muted); font-size: 0.9rem; }
 
-        .filter-section {
-            background: white;
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
+        /* Filter Pills */
+        .scroll-filters {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            overflow-x: auto;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            scrollbar-width: none;
         }
+        .scroll-filters::-webkit-scrollbar { display: none; }
 
-        .filter-group { display: flex; flex-direction: column; gap: 10px; }
-        .filter-label { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); }
-
-        .filters { display: flex; gap: 8px; flex-wrap: wrap; }
-        .filter-btn {
+        .pill {
             padding: 8px 16px;
-            border: 1px solid #e2e8f0;
+            background: var(--item-bg);
             border-radius: 99px;
-            background: white;
-            cursor: pointer;
+            white-space: nowrap;
+            font-size: 0.85rem;
             font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid #e5e7eb;
+            transition: 0.2s;
+        }
+        .pill.active {
+            background: var(--text);
+            color: white;
+            border-color: var(--text);
         }
 
-        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        /* Deal List */
+        .deal-list { display: flex; flex-direction: column; gap: 12px; }
 
-        .deals-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .deal-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s;
+        .deal-item {
             display: flex;
-            flex-direction: column;
-            border: 1px solid #f1f5f9;
+            align-items: center;
+            padding: 16px;
+            background: var(--item-bg);
+            border-radius: 16px;
+            gap: 16px;
+            border: 1px solid #f3f4f6;
         }
 
-        .deal-card:hover { transform: translateY(-4px); }
-
-        .card-img {
-            height: 180px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
+        .emoji-box {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #f1f5f9;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .item-emoji { font-size: 4rem; z-index: 1; }
+        .deal-info { flex-grow: 1; }
+        .deal-name { font-weight: 700; font-size: 1rem; margin-bottom: 2px; }
+        .deal-store { color: var(--muted); font-size: 0.8rem; display: flex; align-items: center; gap: 4px; }
 
-        .price-tag {
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
-            background: var(--accent);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 10px;
+        .deal-price {
+            text-align: right;
             font-weight: 800;
+            color: var(--accent);
             font-size: 1.1rem;
-            box-shadow: 0 4px 10px rgba(244, 63, 94, 0.3);
+            min-width: 80px;
         }
 
-        .card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .cat-badge { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; }
-        .item-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; line-height: 1.3; }
-        .store-info { margin-top: auto; font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+        }
 
-        .no-results { grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-muted); }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="container">
-            <h1>🍎 FreshDeals 11435</h1>
-            <p>Today's Best Grocery Savings in Jamaica, NY</p>
-        </div>
+        <h1>🛒 GroceryRun 11435</h1>
+        <p>Best local deals near Jamaica, NY</p>
     </header>
 
-    <div class="container">
-        <div class="filter-section">
-            <div class="filter-group">
-                <span class="filter-label">Categories</span>
-                <div class="filters" id="catFilters">
-                    <button class="filter-btn active" onclick="setCat('all')">✨ All</button>
-                    <button class="filter-btn" onclick="setCat('Bakery')">🍞 Bakery</button>
-                    <button class="filter-btn" onclick="setCat('Snacks')">🍿 Snacks</button>
-                    <button class="filter-btn" onclick="setCat('Ice Cream')">🍦 Ice Cream</button>
-                    <button class="filter-btn" onclick="setCat('Meat')">🥩 Meat</button>
-                    <button class="filter-btn" onclick="setCat('Dairy')">🥛 Dairy</button>
-                    <button class="filter-btn" onclick="setCat('Produce')">🥦 Produce</button>
-                </div>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Stores</span>
-                <div class="filters" id="storeFilters">
-                    <button class="filter-btn active" onclick="setStore('all')">All Stores</button>
-                    <button class="filter-btn" onclick="setStore('Foodtown')">Foodtown</button>
-                    <button class="filter-btn" onclick="setStore('Ideal Food Basket')">Ideal</button>
-                    <button class="filter-btn" onclick="setStore('Key Food')">Key Food</button>
-                    <button class="filter-btn" onclick="setStore('C-Town')">C-Town</button>
-                    <button class="filter-btn" onclick="setStore('Food Bazaar')">Food Bazaar</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="dealsGrid" class="deals-grid"></div>
+    <div class="scroll-filters" id="catFilters">
+        <div class="pill active" onclick="setCat('all')">✨ All</div>
+        <div class="pill" onclick="setCat('Bakery')">🍞 Bakery</div>
+        <div class="pill" onclick="setCat('Snacks')">🍿 Snacks</div>
+        <div class="pill" onclick="setCat('Ice Cream')">🍦 Ice Cream</div>
+        <div class="pill" onclick="setCat('Meat')">🥩 Meat</div>
+        <div class="pill" onclick="setCat('Dairy')">🥛 Dairy</div>
+        <div class="pill" onclick="setCat('Produce')">🥦 Produce</div>
     </div>
 
+    <div class="scroll-filters" id="storeFilters">
+        <div class="pill active" onclick="setStore('all')">🏪 All Stores</div>
+        <div class="pill" onclick="setStore('Foodtown')">Foodtown</div>
+        <div class="pill" onclick="setStore('Ideal Food Basket')">Ideal</div>
+        <div class="pill" onclick="setStore('Key Food')">Key Food</div>
+        <div class="pill" onclick="setStore('C-Town')">C-Town</div>
+        <div class="pill" onclick="setStore('Food Bazaar')">Food Bazaar</div>
+    </div>
+
+    <div class="deal-list" id="dealList"></div>
+
+    <footer>
+        Updated: April 22, 2026<br>
+        Open source project on GitHub
+    </footer>
+
     <script>
-        // Unique imagery mapping
         const visualMap = {
-            'Baguettes': { emoji: '🥖', img: 'https://images.unsplash.com/photo-1598144819059-42cd69b25693?auto=format&fit=crop&w=400&q=80' },
-            'Bites': { emoji: '🧁', img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=400&q=80' },
-            'Cookies': { emoji: '🍪', img: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=400&q=80' },
-            'Bread': { emoji: '🍞', img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80' },
-            'Pie': { emoji: '🥧', img: 'https://images.unsplash.com/photo-1572383661896-f99fb085057a?auto=format&fit=crop&w=400&q=80' },
-            'Donuts': { emoji: '🍩', img: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=400&q=80' },
-            'Chips': { emoji: '🥔', img: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=400&q=80' },
-            'Soda': { emoji: '🥤', img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80' },
-            'Pringles': { emoji: '🥫', img: 'https://images.unsplash.com/photo-1518085033483-e7119953930d?auto=format&fit=crop&w=400&q=80' },
-            'Ice Cream': { emoji: '🍨', img: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=400&q=80' },
-            'Steak': { emoji: '🥩', img: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80' },
-            'Chicken': { emoji: '🍗', img: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=400&q=80' },
-            'Salmon': { emoji: '🐟', img: 'https://images.unsplash.com/photo-1485921325833-c519f76c4927?auto=format&fit=crop&w=400&q=80' },
-            'Shrimp': { emoji: '🦐', img: 'https://images.unsplash.com/photo-1559742811-822873691df8?auto=format&fit=crop&w=400&q=80' },
-            'Milk': { emoji: '🥛', img: 'https://images.unsplash.com/photo-1563636619-e9107da93abd?auto=format&fit=crop&w=400&q=80' },
-            'Eggs': { emoji: '🥚', img: 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=400&q=80' },
-            'Cheese': { emoji: '🧀', img: 'https://images.unsplash.com/photo-1485962391945-44760221d035?auto=format&fit=crop&w=400&q=80' },
-            'Mangoes': { emoji: '🥭', img: 'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=400&q=80' },
-            'Bananas': { emoji: '🍌', img: 'https://images.unsplash.com/photo-1571771894821-ad990241094d?auto=format&fit=crop&w=400&q=80' },
-            'Grapes': { emoji: '🍇', img: 'https://images.unsplash.com/photo-1537640538966-79f369b40189?auto=format&fit=crop&w=400&q=80' }
+            'Baguettes': '🥖', 'Bites': '🧁', 'Cookies': '🍪', 'Bread': '🍞',
+            'Pie': '🥧', 'Donuts': '🍩', 'Chips': '🥔', 'Soda': '🥤',
+            'Pringles': '🥫', 'Ice Cream': '🍦', 'Steak': '🥩', 'Chicken': '🍗',
+            'Salmon': '🐟', 'Shrimp': '🦐', 'Milk': '🥛', 'Eggs': '🥚',
+            'Cheese': '🧀', 'Mangoes': '🥭', 'Bananas': '🍌', 'Grapes': '🍇',
+            'Yogurt': '🍧', 'Butter': '🧈', 'Orange Juice': '🍊'
         };
 
         const deals = [
@@ -201,57 +176,65 @@
             { cat: 'Dairy', name: 'Sargento Shredded Cheese', price: '$2.99', store: 'Foodtown' },
             { cat: 'Produce', name: 'Tropical Mangoes', price: '5/$5.00', store: 'Food Bazaar' },
             { cat: 'Produce', name: 'Fresh Green Bananas', price: '$0.49/lb', store: 'Ideal Food Basket' },
-            { cat: 'Produce', name: 'Red Seedless Grapes', price: '$1.99/lb', store: 'C-Town' }
+            { cat: 'Produce', name: 'Red Seedless Grapes', price: '$1.99/lb', store: 'C-Town' },
+            { cat: 'Dairy', name: 'Chobani Greek Yogurt', price: '10/$10.00', store: 'Food Bazaar' },
+            { cat: 'Dairy', name: 'Tropicana Orange Juice', price: '$3.99', store: 'Ideal Food Basket' },
+            { cat: 'Dairy', name: 'Krasdale Butter', price: '$3.99', store: 'C-Town' }
         ];
 
         let curCat = 'all';
         let curStore = 'all';
 
-        function getVisual(name) {
+        function getEmoji(name) {
             for (let key in visualMap) {
                 if (name.includes(key)) return visualMap[key];
             }
-            return { emoji: '🛍️', img: '' };
+            return '🛍️';
         }
 
         function render() {
-            const grid = document.getElementById('dealsGrid');
-            grid.innerHTML = '';
+            const list = document.getElementById('dealList');
+            list.innerHTML = '';
             const filtered = deals.filter(d => (curCat === 'all' || d.cat === curCat) && (curStore === 'all' || d.store === curStore));
             
             if (!filtered.length) {
-                grid.innerHTML = '<div class="no-results">No deals match these filters. Try something else!</div>';
+                list.innerHTML = '<div class="no-results">No deals found for this filter.</div>';
                 return;
             }
 
             filtered.forEach(d => {
-                const vis = getVisual(d.name);
-                const card = document.createElement('div');
-                card.className = 'deal-card';
-                card.innerHTML = `
-                    <div class="card-img" style="background-image: url('${vis.img}')">
-                        <span class="item-emoji">${vis.img ? '' : vis.emoji}</span>
-                        <div class="price-tag">${d.price}</div>
+                const item = document.createElement('div');
+                item.className = 'deal-item';
+                item.innerHTML = `
+                    <div class="emoji-box">${getEmoji(d.name)}</div>
+                    <div class="deal-info">
+                        <div class="deal-name">${d.name}</div>
+                        <div class="deal-store">📍 ${d.store}</div>
                     </div>
-                    <div class="card-body">
-                        <div class="cat-badge">${d.cat}</div>
-                        <div class="item-name">${d.name}</div>
-                        <div class="store-info">📍 ${d.store}</div>
-                    </div>
+                    <div class="deal-price">${d.price}</div>
                 `;
-                grid.appendChild(card);
+                list.appendChild(item);
             });
         }
 
-        function setCat(c) { 
-            curCat = c; 
-            document.querySelectorAll('#catFilters .filter-btn').forEach(b => b.classList.toggle('active', b.innerText.includes(c) || (c === 'all' && b.innerText.includes('All'))));
-            render(); 
+        function setCat(c) {
+            curCat = c;
+            updatePills('catFilters', c);
+            render();
         }
-        function setStore(s) { 
-            curStore = s; 
-            document.querySelectorAll('#storeFilters .filter-btn').forEach(b => b.classList.toggle('active', b.getAttribute('onclick').includes(`'${s}'`)));
-            render(); 
+
+        function setStore(s) {
+            curStore = s;
+            updatePills('storeFilters', s);
+            render();
+        }
+
+        function updatePills(id, val) {
+            const container = document.getElementById(id);
+            container.querySelectorAll('.pill').forEach(p => {
+                const clickAttr = p.getAttribute('onclick');
+                p.classList.toggle('active', clickAttr.includes(`'${val}'`));
+            });
         }
 
         render();
