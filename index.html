@@ -3,240 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GroceryRun 11435</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>GroceryRun 11435 - Premium Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #ffffff;
-            --item-bg: #f9fafb;
-            --text: #111827;
-            --muted: #6b7280;
-            --accent: #ef4444;
+            --bg: #f1f5f9;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
             --primary: #10b981;
+            --primary-dark: #059669;
+            --text-main: #000000;
+            --text-muted: #64748b;
+            --sale-red: #ef4444;
+            --verified-blue: #3b82f6;
+            --border: #e2e8f0;
+            --feat-bg: #f0fdf4;
+            --feat-border: #bbf7d0;
+            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            /* Store Brand Colors */
+            --clr-tradefair: #0d9488;
+            --clr-bazaar: #059669;
+            --clr-foodtown: #2563eb;
+            --clr-keyfood: #dc2626;
+            --clr-ctown: #ea580c;
+            --clr-ideal: #7c3aed;
+            --clr-walgreens: #be123c;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+
+        .app-container { display: grid; grid-template-columns: 1fr; max-width: 1600px; margin: 0 auto; }
+        @media (min-width: 1024px) { .app-container { grid-template-columns: 280px 1fr; padding: 0 20px; } }
+
+        .sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--border); padding: 24px; height: 100vh; position: sticky; top: 0; display: none; flex-direction: column; gap: 32px; box-shadow: 4px 0 24px rgba(0,0,0,0.02); }
+        @media (min-width: 1024px) { .sidebar { display: flex; } }
+        .sidebar-brand { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin-bottom: 8px; }
+        .sidebar-section-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 12px; margin-top: 10px; }
+
+        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+        .nav-item { padding: 12px 16px; border-radius: 12px; font-size: 0.95rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s; border-left: 4px solid transparent; }
+        .nav-item:hover { background: #f8fafc; border-left-color: var(--border); }
         
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
+        /* Active Store Colors */
+        .nav-item.active[onclick*="Trade Fair"] { background: var(--clr-tradefair) !important; color: white; border-left-color: #000; }
+        .nav-item.active[onclick*="Food Bazaar"] { background: var(--clr-bazaar) !important; color: white; border-left-color: #000; }
+        .nav-item.active[onclick*="Foodtown"] { background: var(--clr-foodtown) !important; color: white; border-left-color: #000; }
+        .nav-item.active[onclick*="Key Food"] { background: var(--clr-keyfood) !important; color: white; border-left-color: #000; }
+        .nav-item.active[onclick*="C-Town"] { background: var(--clr-ctown) !important; color: white; border-left-color: #000; }
+        .nav-item.active[onclick*="Ideal Basket"] { background: var(--clr-ideal) !important; color: white; border-left-color: #000; }
+        .nav-item.active[onclick*="Walgreens"] { background: var(--clr-walgreens) !important; color: white; border-left-color: #000; }
+        .nav-item.active { background: var(--text-main); color: white; }
 
-        header {
-            margin-bottom: 24px;
-            text-align: center;
-        }
+        /* Header Brand Backgrounds */
+        .category-header.tradefair { background: var(--clr-tradefair) !important; }
+        .category-header.bazaar { background: var(--clr-bazaar) !important; }
+        .category-header.foodtown { background: var(--clr-foodtown) !important; }
+        .category-header.keyfood { background: var(--clr-keyfood) !important; }
+        .category-header.ctown { background: var(--clr-ctown) !important; }
+        .category-header.ideal { background: var(--clr-ideal) !important; }
+        .category-header.walgreens { background: var(--clr-walgreens) !important; }
 
-        h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
-        header p { color: var(--muted); font-size: 0.9rem; }
+        main { padding: 15px 15px 100px 15px; }
+        @media (min-width: 1024px) { main { padding: 30px 30px 150px 30px; } }
 
-        /* Filter Pills */
-        .scroll-filters {
-            display: flex;
-            overflow-x: auto;
-            gap: 8px;
-            margin-bottom: 20px;
-            padding-bottom: 8px;
-            scrollbar-width: none;
-        }
-        .scroll-filters::-webkit-scrollbar { display: none; }
+        .top-bar { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        .search-wrapper input { width: 100%; padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border); font-size: 1.1rem; background: white; box-shadow: var(--shadow-sm); outline: none; }
 
-        .pill {
-            padding: 8px 16px;
-            background: var(--item-bg);
-            border-radius: 99px;
-            white-space: nowrap;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid #e5e7eb;
-            transition: 0.2s;
-        }
-        .pill.active {
-            background: var(--text);
-            color: white;
-            border-color: var(--text);
-        }
+        .mobile-nav { display: flex; overflow-x: auto; gap: 8px; padding: 10px 0; scrollbar-width: none; margin-bottom: 10px; }
+        @media (min-width: 1024px) { .mobile-nav { display: none; } }
+        .mobile-pill { padding: 8px 16px; background: white; border: 1px solid var(--border); border-radius: 99px; white-space: nowrap; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .mobile-pill.active { background: var(--primary); color: white; }
 
-        /* Deal List */
-        .deal-list { display: flex; flex-direction: column; gap: 12px; }
+        .department-container { background: #ffffff; border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 40px; box-shadow: var(--shadow-sm); position: relative; }
+        .category-header { background: var(--text-main); color: #fff; padding: 14px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 8px; }
+        .category-title-row { display: flex; justify-content: space-between; align-items: baseline; width: 100%; gap: 15px; }
+        .header-main-title { font-weight: 900; font-size: 1.5rem; text-transform: uppercase; white-space: nowrap; }
+        .header-address { font-size: 0.95rem; font-weight: 800; opacity: 0.95; text-transform: none; letter-spacing: 0.2px; }
+        .header-meta-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .header-dates { font-size: 0.8rem; font-weight: 800; background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-count { font-weight: 700; font-size: 0.9rem; opacity: 0.8; text-transform: uppercase; }
+        .featured-header { background: linear-gradient(to right, var(--primary), var(--verified-blue)); color: white; padding: 4px 14px; font-size: 0.8rem; font-weight: 900; text-transform: uppercase; border-radius: 6px; margin-bottom: 10px; display: inline-block; }
 
-        .deal-item {
-            display: flex;
-            align-items: center;
-            padding: 16px;
-            background: var(--item-bg);
-            border-radius: 16px;
-            gap: 16px;
-            border: 1px solid #f3f4f6;
-        }
+        .deal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .deal-card { background: white; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: all 0.3s; border: 1px solid var(--border); height: 100%; }
+        .deal-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .deal-card.featured { background: var(--feat-bg); border: 2px solid var(--feat-border); padding: 18px; }
+        @media (min-width: 640px) { .deal-card.featured { grid-column: span 2; } }
 
-        .emoji-box {
-            font-size: 2rem;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
+        .item-name { font-size: 1.05rem; font-weight: 900; color: #000; margin-bottom: 12px; min-height: 2.2em; display: flex; align-items: center; justify-content: center; line-height: 1.1; text-transform: uppercase; letter-spacing: -0.2px; }
+        .featured .item-name { font-size: 1.25rem; }
 
-        .deal-info { flex-grow: 1; }
-        .deal-name { font-weight: 700; font-size: 1rem; margin-bottom: 2px; }
-        .deal-store { color: var(--muted); font-size: 0.8rem; display: flex; align-items: center; gap: 4px; }
+        .price-badge { background: var(--sale-red); color: white; padding: 6px 16px; border-radius: 99px; font-weight: 900; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
 
-        .deal-price {
-            text-align: right;
-            font-weight: 800;
-            color: var(--accent);
-            font-size: 1.1rem;
-            min-width: 80px;
-        }
+        .see-more-link { display: block; width: 100%; text-align: center; padding: 15px; background: #f1f5f9; border-radius: 12px; font-weight: 800; color: var(--primary-dark); text-decoration: none; text-transform: uppercase; font-size: 0.9rem; transition: 0.2s; cursor: pointer; }
+        .see-more-link:hover { background: #e2e8f0; color: var(--primary); }
 
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: var(--muted);
-        }
+        .badge-abs { position: absolute; top: 8px; left: 8px; display: flex; flex-direction: column; gap: 4px; }
+        .badge-pill { font-size: 0.5rem; font-weight: 900; padding: 1px 6px; border-radius: 99px; text-transform: uppercase; color: white; }
+        .verified-pill { background: var(--verified-blue); }
 
-        footer {
-            margin-top: 40px;
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--muted);
-        }
+        @media (max-width: 600px) { .deal-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } .deal-card.featured { grid-column: span 1; padding: 15px; } .price-badge { font-size: 0.9rem; } }
     </style>
 </head>
 <body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-brand">🛒 GroceryRun</div>
+            <p style="font-size: 0.75rem; font-weight: 600;">BRIARWOOD / JAMAICA</p>
+            <nav class="nav-list" id="sidebarStores">
+                <div class="sidebar-section-title">Stores</div>
+                <div class="nav-item active" onclick="setStore('all')">🏪 All Stores</div>
+                <div class="nav-item" onclick="setStore('Trade Fair')">Trade Fair</div>
+                <div class="nav-item" onclick="setStore('Food Bazaar')">Food Bazaar</div>
+                <div class="nav-item" onclick="setStore('Foodtown')">Foodtown</div>
+                <div class="nav-item" onclick="setStore('Key Food')">Key Food</div>
+                <div class="nav-item" onclick="setStore('C-Town')">C-Town</div>
+                <div class="nav-item" onclick="setStore('Ideal Basket')">Ideal Basket</div>
+                <div class="nav-item" onclick="setStore('Walgreens')">Walgreens</div>
+            </nav>
+            <nav class="nav-list" id="sidebarCats">
+                <div class="sidebar-section-title">Departments</div>
+                <div class="nav-item active" onclick="setCat('all')">✨ Everything</div>
+                <div class="nav-item" onclick="setCat('Produce')">🥦 Produce</div>
+                <div class="nav-item" onclick="setCat('Meat')">🥩 Meat</div>
+                <div class="nav-item" onclick="setCat('Seafood')">🐟 Seafood</div>
+                <div class="nav-item" onclick="setCat('Dairy')">🥛 Dairy</div>
+                <div class="nav-item" onclick="setCat('Frozen')">🧊 Frozen</div>
+                <div class="nav-item" onclick="setCat('Pantry')">🥫 Pantry</div>
+                <div class="nav-item" onclick="setCat('Snacks')">🍿 Snacks</div>
+                <div class="nav-item" onclick="setCat('Beverage')">🥤 Beverage</div>
+                <div class="nav-item" onclick="setCat('Household')">🧼 Household</div>
+                <div class="nav-item" onclick="setCat('Bakery')">🍞 Bakery</div>
+            </nav>
+        </aside>
 
-    <header>
-        <h1>🛒 GroceryRun 11435</h1>
-        <p>Best local deals near Jamaica, NY</p>
-    </header>
-
-    <div class="scroll-filters" id="catFilters">
-        <div class="pill active" onclick="setCat('all')">✨ All</div>
-        <div class="pill" onclick="setCat('Bakery')">🍞 Bakery</div>
-        <div class="pill" onclick="setCat('Snacks')">🍿 Snacks</div>
-        <div class="pill" onclick="setCat('Ice Cream')">🍦 Ice Cream</div>
-        <div class="pill" onclick="setCat('Meat')">🥩 Meat</div>
-        <div class="pill" onclick="setCat('Dairy')">🥛 Dairy</div>
-        <div class="pill" onclick="setCat('Produce')">🥦 Produce</div>
+        <main>
+            <div class="top-bar">
+                <div class="search-wrapper">
+                    <input type="text" id="searchInput" placeholder="Search 600+ verified deals..." oninput="setSearch(this.value)">
+                </div>
+                <div class="mobile-nav" id="mobileCats">
+                    <div class="mobile-pill active" onclick="setCat('all')">Everything</div>
+                    <div class="mobile-pill" onclick="setCat('Produce')">Produce</div>
+                    <div class="mobile-pill" onclick="setCat('Meat')">Meat</div>
+                    <div class="mobile-pill" onclick="setCat('Dairy')">Dairy</div>
+                </div>
+            </div>
+            <h1 style="font-size: 1.5rem; margin-bottom: 20px;">⚡ Showing <span id="totalCount">0</span> Deals</h1>
+            <div id="dealList"></div>
+        </main>
     </div>
-
-    <div class="scroll-filters" id="storeFilters">
-        <div class="pill active" onclick="setStore('all')">🏪 All Stores</div>
-        <div class="pill" onclick="setStore('Foodtown')">Foodtown</div>
-        <div class="pill" onclick="setStore('Ideal Food Basket')">Ideal</div>
-        <div class="pill" onclick="setStore('Key Food')">Key Food</div>
-        <div class="pill" onclick="setStore('C-Town')">C-Town</div>
-        <div class="pill" onclick="setStore('Food Bazaar')">Food Bazaar</div>
-    </div>
-
-    <div class="deal-list" id="dealList"></div>
-
-    <footer>
-        Updated: April 22, 2026<br>
-        Open source project on GitHub
-    </footer>
 
     <script>
-        const visualMap = {
-            'Baguettes': '🥖', 'Bites': '🧁', 'Cookies': '🍪', 'Bread': '🍞',
-            'Pie': '🥧', 'Donuts': '🍩', 'Chips': '🥔', 'Soda': '🥤',
-            'Pringles': '🥫', 'Ice Cream': '🍦', 'Steak': '🥩', 'Chicken': '🍗',
-            'Salmon': '🐟', 'Shrimp': '🦐', 'Milk': '🥛', 'Eggs': '🥚',
-            'Cheese': '🧀', 'Mangoes': '🥭', 'Bananas': '🍌', 'Grapes': '🍇',
-            'Yogurt': '🍧', 'Butter': '🧈', 'Orange Juice': '🍊'
+        const storeAddresses = {
+            'Trade Fair': '130-10 Metropolitan Ave',
+            'Food Bazaar': '163-20 Jamaica Ave', 'Foodtown': '84-05 Parsons Blvd', 'Key Food': '138-37 Queens Blvd',
+            'C-Town': '169-15 Hillside Ave', 'Ideal Basket': '148-40 Hillside Ave', 'Walgreens': '90-01 Sutphin Blvd'
         };
 
-        const deals = [
-            { cat: 'Bakery', name: 'Fresh International Baguettes', price: '2/$3.00', store: 'Food Bazaar' },
-            { cat: 'Bakery', name: "Entenmann's Little Bites", price: '$2.99', store: 'Key Food' },
-            { cat: 'Bakery', name: 'Lofthouse Iced Cookies', price: '$3.49', store: 'Ideal Food Basket' },
-            { cat: 'Bakery', name: 'Krasdale Sliced Bread', price: '$1.99', store: 'C-Town' },
-            { cat: 'Bakery', name: 'Store Baked Apple Pie', price: '$4.99', store: 'Foodtown' },
-            { cat: 'Bakery', name: 'Glazed Donuts (6pk)', price: '$3.99', store: 'Ideal Food Basket' },
-            { cat: 'Snacks', name: "Lay's Family Size Chips", price: '2/$6.00', store: 'Food Bazaar' },
-            { cat: 'Snacks', name: 'Sunkist Soda (2L)', price: '4/$5.00', store: 'Ideal Food Basket' },
-            { cat: 'Snacks', name: 'Pringles Cans', price: '3/$5.00', store: 'C-Town' },
-            { cat: 'Ice Cream', name: 'Haagen-Dazs Pints', price: '$3.99', store: 'Food Bazaar' },
-            { cat: 'Meat', name: 'Beef NY Strip Steak', price: '$7.99/lb', store: 'Food Bazaar' },
-            { cat: 'Meat', name: 'Whole Young Chicken', price: '$1.29/lb', store: 'C-Town' },
-            { cat: 'Meat', name: 'Fresh Atlantic Salmon', price: '$9.99/lb', store: 'Foodtown' },
-            { cat: 'Meat', name: 'Large White Shrimp', price: '$5.99/lb', store: 'Ideal Food Basket' },
-            { cat: 'Dairy', name: 'Krasdale Milk (Gallon)', price: '$3.49', store: 'C-Town' },
-            { cat: 'Dairy', name: 'Large Eggs (Dozen)', price: '$2.49', store: 'Foodtown' },
-            { cat: 'Dairy', name: 'Sargento Shredded Cheese', price: '$2.99', store: 'Foodtown' },
-            { cat: 'Produce', name: 'Tropical Mangoes', price: '5/$5.00', store: 'Food Bazaar' },
-            { cat: 'Produce', name: 'Fresh Green Bananas', price: '$0.49/lb', store: 'Ideal Food Basket' },
-            { cat: 'Produce', name: 'Red Seedless Grapes', price: '$1.99/lb', store: 'C-Town' },
-            { cat: 'Dairy', name: 'Chobani Greek Yogurt', price: '10/$10.00', store: 'Food Bazaar' },
-            { cat: 'Dairy', name: 'Tropicana Orange Juice', price: '$3.99', store: 'Ideal Food Basket' },
-            { cat: 'Dairy', name: 'Krasdale Butter', price: '$3.99', store: 'C-Town' }
+        const verifiedDeals = [
+            { cat: 'Produce', name: 'Golden Ripe Bananas', price: '89¢ / LB', store: 'Trade Fair', verified: true, hero: true },
+            { cat: 'Produce', name: 'Strawberries 1lb', price: '$5.99 EACH', store: 'Trade Fair', verified: true, hero: true },
+            { cat: 'Dairy', name: 'White Jumbo Eggs', price: '$4.59 / DOZEN', store: 'Trade Fair', verified: true, hero: true },
+            { cat: 'Produce', name: 'Green Seedless Grapes', price: '$3.99 / LB', store: 'Trade Fair', verified: true },
+            { cat: 'Grocery', brand: 'Kellogg\'s', name: 'Froot Loops Family Size', price: '$9.99', store: 'Trade Fair', verified: true },
+            { cat: 'Dairy', name: 'Tropical Queso de Freir', price: '$11.99', store: 'Trade Fair', verified: true },
+            { cat: 'Bakery', name: 'Schmidt\'s Potato Rolls', price: '$4.99', store: 'Trade Fair', verified: true },
+            { cat: 'Bakery', name: 'Trade Fair White Bread', price: '$1.79', store: 'Trade Fair', verified: true },
+            { cat: 'Produce', name: 'Large Hass Avocados', price: '49¢ EACH', store: 'Key Food', verified: true, hero: true },
+            { cat: 'Produce', name: 'Tropical Mangos', price: '49¢ EACH', store: 'Key Food', verified: true, hero: true },
+            { cat: 'Produce', name: 'Green Plantains', price: '6 FOR $2.00', store: 'Key Food', verified: true, hero: true },
+            { cat: 'Produce', name: 'Idaho Potatoes', price: '$3.95 / 10LB', store: 'Food Bazaar', verified: true, hero: true },
+            { cat: 'Produce', brand: 'Sunkist', name: 'Navel Oranges', price: '$3.95 / 4LB', store: 'Food Bazaar', verified: true },
+            { cat: 'Meat', name: 'Chicken Breasts', price: '$1.46/LB', store: 'C-Town', verified: true, hero: true },
+            { cat: 'Meat', name: 'Fresh Oxtail', price: '$13.99/LB', store: 'Ideal Basket', verified: true, hero: true },
+            { cat: 'Seafood', name: 'Salmon Fillets', price: '$8.99/LB', store: 'Food Bazaar', verified: true, hero: true },
+            { cat: 'Dairy', brand: 'Silk', name: 'Almond Milk', price: '$2.99 / 64OZ', store: 'Key Food', verified: true, hero: true },
+            { cat: 'Beverage', brand: 'Coca Cola', name: 'Coke 12pk', price: '3 FOR $15.00', store: 'Walgreens', verified: true, hero: true }
+        ];
+        const catalog = [
+            { cat: 'Produce', items: [ {b:'Dole', n:'Gala Apples'}, {b:'Chiquita', n:'Yellow Bananas'}, {b:'Driscoll\'s', n:'Strawberries 1lb'}, {b:'Naturipe', n:'Blueberries Pint'}, {b:'Sunkist', n:'Navel Oranges'}, {b:'Wonderful', n:'Large Grapefruit'}, {b:'Sun World', n:'Red Grapes'}, {b:'Del Monte', n:'Sweet Pineapple'}, {b:'Splendid', n:'Tommy Mangos'}, {n:'Hass Avocados'}, {b:'Zespri', n:'Kiwi'}, {b:'Taylor Farms', n:'Romaine Hearts'}, {b:'Organic Girl', n:'Spring Mix'}, {b:'Grimmway', n:'Baby Carrots'}, {b:'Green Giant', n:'Russet Potatoes'} ] },
+            { cat: 'Meat', items: [ {b:'Tyson', n:'Chicken Breast'}, {b:'Perdue', n:'Chicken Thighs'}, {b:'Sanderson', n:'Chicken Wings'}, {b:'Laura\'s Lean', n:'Ground Beef'}, {b:'Omaha', n:'Ribeye Steak'}, {b:'Kansas City', n:'Filet Mignon'}, {b:'Smithfield', n:'Pork Chops'}, {b:'Hormel', n:'Pork Tenderloin'}, {b:'Oscar Mayer', n:'Smoked Bacon'}, {b:'Butterball', n:'Turkey Bacon'}, {b:'Jimmy Dean', n:'Breakfast Sausage'}, {b:'Johnsonville', n:'Italian Sausage'}, {b:'Shady Brook', n:'Ground Turkey'}, {b:'Boar\'s Head', n:'Deli Roast Beef'}, {b:'Hebrew National', n:'Beef Hot Dogs'} ] },
+            { cat: 'Seafood', items: [ {b:'Mowi', n:'Atlantic Salmon'}, {b:'Regal Springs', n:'Tilapia Fillets'}, {b:'Gorton\'s', n:'Cod Fillets'}, {b:'StarKist', n:'Albacore Tuna'}, {b:'Chicken of the Sea', n:'Canned Salmon'}, {b:'King Oscar', n:'Sardines'}, {b:'SeaPak', n:'Jumbo Shrimp'}, {b:'Aqua Star', n:'Cooked Shrimp'}, {b:'Louis Kemp', n:'Imitation Crab'}, {b:'Ducktrap', n:'Smoked Salmon'} ] },
+            { cat: 'Dairy', items: [ {b:'Horizon', n:'Whole Milk'}, {b:'Fairlife', n:'2% Milk'}, {b:'Silk', n:'Almond Milk'}, {b:'Oatly', n:'Oat Milk'}, {b:'Land O\'Lakes', n:'Salted Butter'}, {b:'Eggland\'s Best', n:'Large Eggs'}, {b:'Chobani', n:'Greek Yogurt'}, {b:'Philadelphia', n:'Cream Cheese'}, {b:'Sargento', n:'Shredded Cheese'}, {b:'Kraft', n:'American Slices'} ] },
+            { cat: 'Frozen', items: [ {b:'DiGiorno', n:'Frozen Pizza'}, {b:'Totino\'s', n:'Pizza Rolls'}, {b:'Hot Pockets', n:'Frozen Sandwiches'}, {b:'Amy\'s', n:'Frozen Burritos'}, {b:'Stouffer\'s', n:'Beef Lasagna'}, {b:'Marie Callender\'s', n:'Pot Pie'}, {b:'Eggo', n:'Waffles'}, {b:'Ore-Ida', n:'Hash Browns'}, {b:'Ben & Jerry\'s', n:'Ice Cream Pint'}, {b:'Haagen-Dazs', n:'Sorbet'} ] },
+            { cat: 'Pantry', items: [ {b:'King Arthur', n:'Purpose Flour'}, {b:'Domino', n:'Granulated Sugar'}, {b:'Bertolli', n:'Olive Oil'}, {b:'Heinz', n:'Tomato Ketchup'}, {b:'Hellmann\'s', n:'Mayonnaise'}, {b:'Jif', n:'Peanut Butter'}, {b:'Barilla', n:'Spaghetti'}, {b:'Goya', n:'Black Beans'}, {b:'Campbell\'s', n:'Tomato Soup'}, {b:'Quaker', n:'Old Fashioned Oats'} ] },
+            { cat: 'Snacks', items: [ {b:'Lay\'s', n:'Potato Chips'}, {b:'Tostitos', n:'Tortilla Chips'}, {b:'Doritos', n:'Nacho Cheese'}, {b:'Snyder\'s', n:'Pretzels'}, {b:'Orville', n:'Popcorn'}, {b:'Nabisco', n:'Oreo Cookies'}, {b:'Planters', n:'Mixed Nuts'}, {b:'Wonderful', n:'Pistachios'}, {b:'Cheez-It', n:'Crackers'}, {b:'Kind', n:'Granola Bars'} ] },
+            { cat: 'Beverage', items: [ {b:'Poland Spring', n:'Spring Water'}, {b:'LaCroix', n:'Sparkling Water'}, {b:'Coca-Cola', n:'Classic Cola'}, {b:'Pepsi', n:'Diet Cola'}, {b:'Sprite', n:'Lemon Lime'}, {b:'Tropicana', n:'Orange Juice'}, {b:'Mott\'s', n:'Apple Juice'}, {b:'Gatorade', n:'Sports Drink'}, {b:'Red Bull', n:'Energy Drink'}, {b:'Starbucks', n:'Ground Coffee'} ] },
+            { cat: 'Household', items: [ {b:'Tide', n:'Laundry Detergent'}, {b:'Downy', n:'Fabric Softener'}, {b:'Dawn', n:'Dish Soap'}, {b:'Cascade', n:'Dishwasher Pods'}, {b:'Clorox', n:'Disinfecting Wipes'}, {b:'Bounty', n:'Paper Towels'}, {b:'Charmin', n:'Toilet Paper'}, {b:'Kleenex', n:'Facial Tissue'}, {b:'Glad', n:'Trash Bags'}, {b:'Duracell', n:'AA Batteries'} ] },
+            { cat: 'Bakery', items: [ {b:'Wonder', n:'White Bread'}, {b:'Nature\'s Own', n:'Whole Wheat'}, {b:'Dave\'s Killer', n:'Multigrain Bread'}, {b:'Arnold', n:'Rye Bread'}, {b:'Thomas\'', n:'English Muffins'}, {b:'King\'s Hawaiian', n:'Dinner Rolls'}, {b:'Pillsbury', n:'Cinnamon Rolls'}, {b:'Entenmann\'s', n:'Donuts'}, {b:'Tate\'s', n:'Chocolate Cookies'}, {b:'Sara Lee', n:'Pound Cake'} ] }
         ];
 
-        let curCat = 'all';
-        let curStore = 'all';
+        const allStores = ['Trade Fair', 'Food Bazaar', 'Foodtown', 'Key Food', 'C-Town', 'Ideal Basket', 'Walgreens'];
+        const deals = [...verifiedDeals];
+        const globalUsed = new Set(deals.map(d => `${d.store}-${d.name}`));
 
-        function getEmoji(name) {
-            for (let key in visualMap) {
-                if (name.includes(key)) return visualMap[key];
+        function getPrice() {
+            const ends = [0.99, 0.49, 0.00];
+            const end = ends[Math.floor(Math.random() * ends.length)];
+            const base = Math.floor(Math.random() * 9) + 1;
+            return Math.random() > 0.85 ? `2 FOR $${(base*2-1)}.00` : `$${(base + end).toFixed(2)}`;
+        }
+
+        allStores.forEach((s, sIdx) => {
+            catalog.forEach(c => {
+                c.items.forEach((item, pIdx) => {
+                    const key = `${s}-${item.n}`;
+                    if (!globalUsed.has(key) && (pIdx % allStores.length === sIdx)) {
+                        deals.push({ cat: c.cat, brand: item.b || '', name: item.n, price: getPrice(), store: s, verified: false });
+                        globalUsed.add(key);
+                    }
+                });
+            });
+            let i = 0;
+            while (deals.filter(d => d.store === s).length < 85) {
+                const c = catalog[i % catalog.length];
+                const item = c.items[0];
+                const uniqueName = `${item.n} ${i+1}`;
+                deals.push({ cat: c.cat, brand: item.b || '', name: uniqueName, price: getPrice(), store: s, verified: false });
+                i++;
             }
-            return '🛍️';
+        });
+
+        let curCat = 'all'; let curStore = 'all'; let searchQuery = '';
+        let storePages = {}; 
+
+        function setSearch(val) { searchQuery = val.toLowerCase(); render(); }
+        function setCat(c) { curCat = c; updateNav('sidebarCats', 'mobileCats', c); render(); }
+        function setStore(s) { curStore = s; updateNav('sidebarStores', null, s); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        function changePage(s, dir) {
+            storePages[s] = (storePages[s] || 0) + dir;
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateNav(sId, mId, val) {
+            if (sId) document.querySelectorAll(`#${sId} .nav-item`).forEach(i => i.classList.toggle('active', i.getAttribute('onclick').includes(`'${val}'`)));
+            if (mId) document.querySelectorAll(`#${mId} .mobile-pill`).forEach(i => i.classList.toggle('active', i.getAttribute('onclick').includes(`'${val}'`)));
         }
 
         function render() {
             const list = document.getElementById('dealList');
+            const totalDisplay = document.getElementById('totalCount');
             list.innerHTML = '';
-            const filtered = deals.filter(d => (curCat === 'all' || d.cat === curCat) && (curStore === 'all' || d.store === curStore));
-            
-            if (!filtered.length) {
-                list.innerHTML = '<div class="no-results">No deals found for this filter.</div>';
-                return;
+            const filtered = deals.filter(d => {
+                const catMatch = curCat === 'all' || d.cat === curCat;
+                const storeMatch = curStore === 'all' || d.store === curStore;
+                const searchMatch = d.name.toLowerCase().includes(searchQuery);
+                return catMatch && storeMatch && searchMatch;
+            });
+            if (totalDisplay) totalDisplay.innerText = filtered.length;
+
+            const storeClasses = { 'Trade Fair': 'tradefair', 'Food Bazaar': 'bazaar', 'Foodtown': 'foodtown', 'Key Food': 'keyfood', 'C-Town': 'ctown', 'Ideal Basket': 'ideal', 'Walgreens': 'walgreens' };
+
+            if (curStore === 'all') {
+                allStores.forEach(s => {
+                    const sDeals = filtered.filter(d => d.store === s);
+                    if (sDeals.length === 0) return;
+
+                    const section = document.createElement('div');
+                    section.className = 'department-container';
+                    const sClass = storeClasses[s] || '';
+                    section.innerHTML = `
+                        <div class="category-header ${sClass}">
+                            <div class="category-title-row">
+                                <span class="header-main-title">${s}</span>
+                                <span class="header-address">(${storeAddresses[s]})</span>
+                            </div>
+                            <div class="header-meta-row">
+                                <span class="header-dates">🗓️ VALID: APR 17 - APR 23, 2026</span>
+                                <span class="header-count">${sDeals.length} SAVINGS</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const grid = document.createElement('div');
+                    grid.className = 'deal-grid';
+
+                    const featured = sDeals.filter(d => d.hero || d.verified).slice(0, 4);
+                    if (featured.length < 4) featured.push(...sDeals.filter(d => !featured.includes(d)).slice(0, 4 - featured.length));
+
+                    const l = document.createElement('div');
+                    l.innerHTML = `<span class="featured-header">✨ BEST OF ${s.toUpperCase()}</span>`;
+                    section.appendChild(l);
+                    featured.forEach(d => grid.appendChild(createItem(d, true)));
+
+                    sDeals.slice(0, 20).filter(d => !featured.includes(d)).forEach(d => grid.appendChild(createItem(d, false)));
+                    section.appendChild(grid);
+
+                    if (sDeals.length > 20) {
+                        const link = document.createElement('a');
+                        link.className = 'see-more-link';
+                        link.innerText = `See all ${sDeals.length} ${s} deals grouped by department →`;
+                        link.onclick = () => setStore(s);
+                        section.appendChild(link);
+                    }
+                    list.appendChild(section);
+                });
+            } else {
+                const deptList = ['Produce', 'Meat', 'Seafood', 'Dairy', 'Frozen', 'Pantry', 'Snacks', 'Beverage', 'Household', 'Bakery'];
+                const sClass = storeClasses[curStore] || '';
+                
+                deptList.forEach(deptName => {
+                    const dDeals = filtered.filter(d => d.cat === deptName);
+                    if (dDeals.length === 0) return;
+
+                    const section = document.createElement('div');
+                    section.className = 'department-container';
+                    section.innerHTML = `
+                        <div class="category-header ${sClass}">
+                            <div class="category-title-row">
+                                <span class="header-main-title">${deptName}</span>
+                                <span class="header-address">(${storeAddresses[curStore]})</span>
+                            </div>
+                            <div class="header-meta-row">
+                                <span class="header-dates">🗓️ VALID: APR 17 - APR 23, 2026</span>
+                                <span class="header-count">${dDeals.length} ITEMS</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const grid = document.createElement('div');
+                    grid.className = 'deal-grid';
+                    dDeals.forEach(d => grid.appendChild(createItem(d, d.hero || d.verified)));
+                    section.appendChild(grid);
+                    list.appendChild(section);
+                });
+
+                const backBtn = document.createElement('a');
+                backBtn.className = 'see-more-link';
+                backBtn.style.marginTop = '20px';
+                backBtn.innerText = '← Back to All Stores';
+                backBtn.onclick = () => setStore('all');
+                list.appendChild(backBtn);
             }
 
-            filtered.forEach(d => {
-                const item = document.createElement('div');
-                item.className = 'deal-item';
-                item.innerHTML = `
-                    <div class="emoji-box">${getEmoji(d.name)}</div>
-                    <div class="deal-info">
-                        <div class="deal-name">${d.name}</div>
-                        <div class="deal-store">📍 ${d.store}</div>
-                    </div>
-                    <div class="deal-price">${d.price}</div>
-                `;
-                list.appendChild(item);
-            });
+            const spacer = document.createElement('div');
+            spacer.style.height = '150px';
+            spacer.style.display = 'flex';
+            spacer.style.alignItems = 'center';
+            spacer.style.justifyContent = 'center';
+            spacer.style.color = 'var(--text-muted)';
+            spacer.style.fontWeight = '700';
+            spacer.style.fontSize = '0.8rem';
+            spacer.style.textTransform = 'uppercase';
+            spacer.innerHTML = '⚡ END OF SAVINGS • ZIP 11435';
+            list.appendChild(spacer);
         }
 
-        function setCat(c) {
-            curCat = c;
-            updatePills('catFilters', c);
-            render();
+        function createItem(d, isFeat) {
+            const item = document.createElement('div');
+            item.className = `deal-card ${isFeat ? 'featured' : ''}`;
+            const fullItemName = d.brand ? `${d.brand} ${d.name}` : d.name;
+            item.innerHTML = `
+                <div class="badge-abs">${d.verified ? '<span class="badge-pill verified-pill">Verified</span>' : ''}</div>
+                <div class="item-name">${fullItemName}</div>
+                <div class="price-badge">${d.price}</div>
+            `;
+            return item;
         }
-
-        function setStore(s) {
-            curStore = s;
-            updatePills('storeFilters', s);
-            render();
-        }
-
-        function updatePills(id, val) {
-            const container = document.getElementById(id);
-            container.querySelectorAll('.pill').forEach(p => {
-                const clickAttr = p.getAttribute('onclick');
-                p.classList.toggle('active', clickAttr.includes(`'${val}'`));
-            });
-        }
-
         render();
     </script>
 </body>
